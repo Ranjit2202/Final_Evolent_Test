@@ -1,0 +1,144 @@
+﻿@model CRUDUsingMVC.Models.Tbl_Contact
+
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Add Employee</h4>
+        <div>
+            @Html.ActionLink("Back to Employee List", "GetAllEmpDetails", "Home")
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            First Name
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.First_Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.First_Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Last_Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Last_Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Last_Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Status)
+                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="btnAdd" value="Add" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10" style="color:green">
+                @ViewBag.Message
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script type="text/javascript">
+    //Add event handler.
+    $("body").on("click", "#btnAdd", function () {
+        var First_Name = $("#First_Name");
+        var Last_Name = $("#Last_Name");
+        var Email = $("#Email");
+        var PhoneNumber = $("#PhoneNumber");
+        var Status = $("#Status");
+
+        var _Contact = {};
+        _Contact.First_Name = First_Name.val();
+        _Contact.Last_Name = Last_Name.val();
+        _Contact.Email = Email.val();
+        _Contact.PhoneNumber = PhoneNumber.val();
+        
+        if (document.getElementById('Status').checked) {
+            _Contact.Status = true;
+        } else { _Contact.Status = false; }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/AjaxAPI/InsertContact",
+            data: JSON.stringify(_Contact),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                if (r == true) {
+                    location.href = "/Home/GetAllEmpDetails"
+                }
+            }
+        });
+    });
+
+    
+    ////Update event handler.
+    //$("body").on("click", "#tblCustomers .Update", function () {
+    //    var row = $(this).closest("tr");
+    //    $("td", row).each(function () {
+    //        if ($(this).find("input").length > 0) {
+    //            var span = $(this).find("span");
+    //            var input = $(this).find("input");
+    //            span.html(input.val());
+    //            span.show();
+    //            input.hide();
+    //        }
+    //    });
+    //    row.find(".Edit").show();
+    //    row.find(".Delete").show();
+    //    row.find(".Cancel").hide();
+    //    $(this).hide();
+    //    var _customer = {};
+    //    _customer.CustomerId = row.find(".CustomerId").find("span").html();
+    //    _customer.Name = row.find(".Name").find("span").html();
+    //    _customer.Country = row.find(".Country").find("span").html();
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/api/AjaxAPI/UpdateCustomer",
+    //        data: JSON.stringify(_customer),
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json"
+    //    });
+    //});
+
+</script>
