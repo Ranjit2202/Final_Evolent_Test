@@ -1,0 +1,123 @@
+﻿@model CRUDUsingMVC.Models.Tbl_Contact
+@{
+    Layout = "~/Views/Contact/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Update Record </h4>
+            <hr />
+
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.First_Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.First_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.First_Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Last_Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Last_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Last_Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Status)
+                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" id="btnUpdate" class="btn btn-success" value="Update" />
+                </div>
+            </div>
+        </div>
+    }
+
+</body>
+</html>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script type="text/javascript">
+    //Add event handler.
+    $("body").on("click", "#btnUpdate", function () {
+        var First_Name = $("#First_Name");
+        var Last_Name = $("#Last_Name");
+        var Email = $("#Email");
+        var PhoneNumber = $("#PhoneNumber");
+
+        if (First_Name.val() == "") { alert("Enter First Name.!"); $("#First_Name").focus(); return false; }
+        if (Last_Name.val() == "") { alert("Enter Last Name.!"); $("#Last_Name").focus();return false; }
+        if (Email.val() == "") { alert("Enter E-Mail Id.!"); $("#Email").focus();return false; }
+        if (PhoneNumber.val() == "") { alert("Enter Phone Nummber.!"); $("#PhoneNumber").focus();return false; }
+
+
+        var _Contact = {};
+
+        _Contact.Id = $("#Id").val();
+        _Contact.First_Name = First_Name.val();
+        _Contact.Last_Name = Last_Name.val();
+        _Contact.Email = Email.val();
+        _Contact.PhoneNumber = PhoneNumber.val();
+
+        if (document.getElementById('Status').checked) {
+            _Contact.Status = true;
+        } else { _Contact.Status = false; }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/AjaxAPI/UpdateContact",
+            data: JSON.stringify(_Contact),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                alert("Record Updated Successfully.!");
+                if (r == true) {
+                    location.href = "/Contact/GetContactList"
+                }
+            }
+        });
+    });
+
+</script>
